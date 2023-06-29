@@ -3,14 +3,14 @@ const app = express()
 const { connectToDb, getDb} = require('./database')
 const router = require('./routes')
 app.use(express.json())
-const PORT = process.env.PORT || 4000
+// const PORT = process.env.PORT || 4000
 
 let database
 
 connectToDb((err) => {
     if(!err){
-        app.listen(PORT, ()=> {
-            console.log("Inventory is listening to port PORT")
+        app.listen(4000, ()=> {
+            console.log("Inventory is listening to port 4000")
         })
         database = getDb()
     }else{
