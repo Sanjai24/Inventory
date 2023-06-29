@@ -2,7 +2,7 @@ const { MongoClient, ListCollectionsCursor } = require('mongodb')
 let dbConnection
 
 // let uri = "mongodb+srv://Sanjais24:b6ZRteiKWSetOEIP@cluster0.nbkds1x.mongodb.net/Inventory"
-let uri4 = "mongodb+srv://Sanjais24:b6ZRteiKWSetOEIP@cluster0.nbkds1x.mongodb.net/?retryWrites=true&w=majority"
+// let uri4 = "mongodb+srv://Sanjais24:b6ZRteiKWSetOEIP@cluster0.nbkds1x.mongodb.net/?retryWrites=true&w=majority"
 
 let uri = "mongodb+srv://Sanjais24:b6ZRteiKWSetOEIP@cluster0.nbkds1x.mongodb.net/Inventory?retryWrites=true&w=majority"
 // let uri3 = "mongodb+srv://Sanjais24:test1234@cluster0.nbkds1x.mongodb.net/"
