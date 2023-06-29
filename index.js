@@ -3,13 +3,14 @@ const app = express()
 const { connectToDb, getDb} = require('./database')
 const router = require('./routes')
 app.use(express.json())
+const PORT = process.env.PORT || 4000
 
 let database
 
 connectToDb((err) => {
     if(!err){
-        app.listen(4000, ()=> {
-            console.log("Inventory is listening to port 4000")
+        app.listen(PORT, ()=> {
+            console.log("Inventory is listening to port PORT")
         })
         database = getDb()
     }else{
@@ -27,6 +28,7 @@ app.get('/InventoryItem', (req, res) => {
                 res.status(200).json(Inventory)
             })
             .catch((err)=>{
+                console.log(Inventory)
                 res.status(500).json({error: err})
             })
 })
@@ -58,7 +60,7 @@ app.patch('/InventoryAddition', async (req, res) => {
               res.status(200).json(doc)
             })
           .catch(err => {
-            res.status(500).json({error: "Could not fetch the document"})
+            res.status(500).json({error: err})
             })
     }else{
         database.collection('Current_Stock')
