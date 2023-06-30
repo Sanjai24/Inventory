@@ -1,11 +1,13 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const { connectToDb, getDb} = require('./database')
 const router = require('./routes')
 app.use(express.json())
+// app.use(cors)
 // const PORT = process.env.PORT || 4000
 
-let database
+let database    
 
 connectToDb((err) => {
     if(!err){
@@ -17,6 +19,13 @@ connectToDb((err) => {
         console.log("Database connection failed")
     }
 })
+
+app.use(function(req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+  });
 
 app.get('/InventoryItem', (req, res) => {
     let Inventory = []
@@ -31,18 +40,19 @@ app.get('/InventoryItem', (req, res) => {
                 console.log(Inventory)
                 res.status(500).json({error: err})
             })
+    // next()
 })
 
-app.patch('/InventoryAddition', async (req, res) => {
+app.put('/InventoryAddition', async (req, res) => {
     const addition = req.body
-    let coco = {}
+    let Inventory = {}
 
     await database.collection('Current_Stock')
             .findOne({item_name: addition.item_name})
-            .then(doc => {
+            .then(response => {
                 // res.status(200).json(doc)
-                coco = doc
-                console.log(coco.item_name)
+                Inventory = response
+                console.log(Inventory.item_name)
             })
             .catch((err) => {
                 // res.status(500).json({error: "The problem is"})
@@ -52,7 +62,7 @@ app.patch('/InventoryAddition', async (req, res) => {
 
     // console.log(addition.quantity)
 
-    if(coco){
+    if(Inventory){
         // console.log("works")
         database.collection('Current_Stock')
           .updateOne({item_name: addition.item_name}, {$inc: {quantity: addition.quantity}})
@@ -84,9 +94,9 @@ app.patch('/InventoryConsumption', async (req, res) => {
 
     await database.collection('Current_Stock')
             .findOne({item_name: consumption.item_name})
-            .then(doc => {
+            .then(response => {
                 // res.status(200).json(doc)
-                consum = doc
+                consum = response
                 console.log(consum.item_name)
             })
             .catch((err) => {
@@ -99,8 +109,8 @@ app.patch('/InventoryConsumption', async (req, res) => {
     if(consum.quantity >= consumption.quantity){
         database.collection('Current_Stock')
           .updateOne({item_name: consumption.item_name}, {$inc: {quantity: -consumption.quantity}})
-          .then(doc => {
-              res.status(200).json(doc)
+          .then(response => {
+              res.status(200).json(response)
             })
           .catch(err => {
             res.status(500).json({error: "Could not fetch the document"})
